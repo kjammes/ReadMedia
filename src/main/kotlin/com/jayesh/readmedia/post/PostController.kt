@@ -3,6 +3,7 @@ package com.jayesh.readmedia.post
 import com.jayesh.readmedia.exceptions.FetchFailureException
 import com.jayesh.readmedia.utils.ConversionUtil
 import com.jayesh.readmedia.utils.CustomResponse
+import com.jayesh.readmedia.utils.validation.InputValidator
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -22,7 +23,8 @@ class PostController
 @Autowired
 constructor(
     private val postsService: PostsService,
-    private val LOG: Logger = LoggerFactory.getLogger("PostController")
+    private val LOG: Logger = LoggerFactory.getLogger("PostController"),
+    private val inputValidator: InputValidator = InputValidator()
 ) {
 
     private val conversionUtil: ConversionUtil = ConversionUtil()
@@ -44,9 +46,14 @@ constructor(
 
     @PostMapping("/save")
     fun savePost(@RequestBody postDto: PostDto) : ResponseEntity<CustomResponse<Boolean>> {
-        val post = conversionUtil.convertToPost(postDto)
-
         var customResponse: CustomResponse<Boolean>
+        val validationResponse = inputValidator.isValidPostDto(postDto)
+        if(validationResponse.isNotEmpty()) {
+            customResponse = CustomResponse(validationResponse.toString(), false)
+            ResponseEntity(customResponse, HttpStatus.BAD_REQUEST)
+        }
+
+        val post = conversionUtil.convertToPost(postDto)
         return try {
             LOG.info("Saving post")
             LOG.info(postDto.toString())
