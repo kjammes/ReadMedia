@@ -10,27 +10,27 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
-@RestController("")
+@RestController()
 @RequestMapping("/api/post")
 class PostController
 @Autowired
 constructor(
     private val postsService: PostsService,
     private val LOG: Logger = LoggerFactory.getLogger("PostController"),
-    private val inputValidator: InputValidator = InputValidator()
-) {
-
+    private val inputValidator: InputValidator = InputValidator(),
     private val conversionUtil: ConversionUtil = ConversionUtil()
-
-    @GetMapping("/")
-    fun getPosts(@RequestParam skip: Int,@RequestParam limit: Int) : ResponseEntity<CustomResponse<Page<Post>>> {
+) {
+    @GetMapping("")
+    fun getPosts(@RequestParam(defaultValue = "0") skip: Int,@RequestParam(defaultValue = "5") limit: Int) : ResponseEntity<CustomResponse<Page<Post>>> {
         var customResponse: CustomResponse<Page<Post>>
         var posts : Page<Post> = Page.empty()
         return try {
@@ -44,7 +44,7 @@ constructor(
         }
     }
 
-    @PostMapping("/save")
+    @PostMapping("")
     fun savePost(@RequestBody postDto: PostDto) : ResponseEntity<CustomResponse<Boolean>> {
         var customResponse: CustomResponse<Boolean>
         val validationResponse = inputValidator.isValidPostDto(postDto)
@@ -56,7 +56,6 @@ constructor(
         val post = conversionUtil.convertToPost(postDto)
         return try {
             LOG.info("Saving post")
-            LOG.info(postDto.toString())
             val result = postsService.savePost(post)
             customResponse = CustomResponse("Successfully saved the post!", result)
             ResponseEntity(customResponse, HttpStatus.CREATED)
@@ -64,5 +63,11 @@ constructor(
             customResponse = CustomResponse(e.message ?: "Failed to save the post", false)
             ResponseEntity(customResponse, HttpStatus.INTERNAL_SERVER_ERROR)
         }
+    }
+
+    @DeleteMapping("/{id}")
+    fun deletePost(@PathVariable(value = "id") id: Long) : ResponseEntity<CustomResponse<String>> {
+        val message = postsService.deletePost(id)
+        return ResponseEntity(CustomResponse(message, ""), HttpStatus.OK)
     }
 }
