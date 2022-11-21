@@ -28,13 +28,13 @@ dependencies {
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-	implementation("org.postgresql:postgresql:42.2.6")
-	implementation("com.vladmihalcea:hibernate-types-52:2.10.0")
-	implementation("javax.xml.bind:jaxb-api:2.3.1")
+	implementation("org.postgresql:postgresql:42.5.0")
+	implementation("com.vladmihalcea:hibernate-types-52:2.20.0")
+	implementation("javax.xml.bind:jaxb-api:2.4.0-b180830.0359")
+	implementation("co.elastic.clients:elasticsearch-java:8.5.1")
+	implementation("com.fasterxml.jackson.core:jackson-databind:2.14.0")
+	implementation("jakarta.json:jakarta.json-api:2.1.1")
 
-
-	compileOnly("org.projectlombok:lombok")
-	annotationProcessor("org.projectlombok:lombok")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
