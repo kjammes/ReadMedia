@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
-@RestController()
+@RestController
 @RequestMapping("/api/post")
 class PostController
 @Autowired
@@ -37,7 +37,7 @@ constructor(
             LOG.info("Fetching all posts")
             posts = postsService.findAllPaginated(skip, limit)
             customResponse = CustomResponse("Successfully fetched data", posts)
-            ResponseEntity(customResponse, HttpStatus.OK);
+            ResponseEntity(customResponse, HttpStatus.OK)
         } catch (e: FetchFailureException) {
             customResponse = CustomResponse(e.message ?: "Failed to fetch posts", posts)
             ResponseEntity(customResponse, HttpStatus.INTERNAL_SERVER_ERROR)
