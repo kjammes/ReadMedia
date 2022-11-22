@@ -31,9 +31,6 @@ dependencies {
 	implementation("org.postgresql:postgresql:42.5.0")
 	implementation("com.vladmihalcea:hibernate-types-52:2.20.0")
 	implementation("javax.xml.bind:jaxb-api:2.4.0-b180830.0359")
-	implementation("co.elastic.clients:elasticsearch-java:8.5.1")
-	implementation("com.fasterxml.jackson.core:jackson-databind:2.14.0")
-	implementation("jakarta.json:jakarta.json-api:2.1.1")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
